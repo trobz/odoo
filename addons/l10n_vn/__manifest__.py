@@ -13,7 +13,7 @@ This is the module to manage the accounting chart for Vietnam in Odoo.
 =========================================================================
 
 This module applies to companies based in Vietnamese Accounting Standard (VAS)
-with Chart of account under Circular No. 200/2014/TT-BTC
+ with Chart of account under Circular No. 200/2014/TT-BTC
 
 **Credits:**
     - General Solutions.
@@ -28,5 +28,6 @@ with Chart of account under Circular No. 200/2014/TT-BTC
          'data/l10n_vn_chart_data.xml',
          'data/account_tax_data.xml',
          'data/account_chart_template_data.yml',
-    ]
+    ],
+    'post_init_hook': 'post_init_hook',
 }
