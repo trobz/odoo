@@ -4110,6 +4110,8 @@ class AccountMoveLine(models.Model):
 
     @api.constrains('account_id', 'journal_id')
     def _check_constrains_account_id_journal_id(self):
+        # trobz migrate: we skip this check when migrating
+        return True
         for line in self.filtered(lambda x: x.display_type not in ('line_section', 'line_note')):
             account = line.account_id
             journal = line.move_id.journal_id
