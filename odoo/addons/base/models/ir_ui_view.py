@@ -570,7 +570,18 @@ actual arch.
         return res
 
     def unlink(self):
-        # if in uninstall mode and has children views, emulate an ondelete cascade
+        # trobz migrate: Recursive delete inactive inherited views
+        if self.ids:
+            self.env.cr.execute(f"""
+                WITH RECURSIVE inactive_descendants AS (
+                    SELECT id FROM {self._table} WHERE inherit_id IN %s AND active = 'f'
+                UNION ALL
+                    SELECT v.id FROM {self._table} v
+                    JOIN inactive_descendants d ON v.inherit_id = d.id
+                    WHERE v.active = 'f'
+                )
+                DELETE FROM {self._table} WHERE id IN (SELECT id FROM inactive_descendants)
+            """, [tuple(self.ids)])
         if self.env.context.get('_force_unlink', False) and self.inherit_children_ids:
             self.inherit_children_ids.unlink()
         self.env.registry.clear_cache('templates')
